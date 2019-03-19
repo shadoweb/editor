@@ -1,0 +1,140 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" style="background-color:#fff;">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>WDJA富文本编辑器</title>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/HtmlUtil.js"></script>
+    <script type="text/javascript">
+	//https://developer.mozilla.org/zh-CN/docs/Web/API/Document/execCommand
+        $(function () {
+            $d = $("#editor")[0].contentWindow.document; // IE、FF都兼容
+            $d.designMode = "on";
+            $d.contentEditable = true;
+            $d.open();
+            $d.close();
+            $("body", $d).append("");
+            $('#insert_img').click(function () {
+                // 在iframe中插入一张图片
+                var img = '<img src="' + $('#path').val() + '" />';
+                $("body", $d).append(img);
+            });
+            $('#preview').click(function () {
+                // 获取iframe的body内容，用于显示或者插入到数据库
+                alert($('#editor').contents().find('body').html());
+                $('#preview_area').html($('#editor').contents().find('body').html());
+
+            });
+			$("input").click(function () {
+				var id=this.id;
+				if(id == 'fontName'){
+				setfontName();
+				}else if(id == 'fontSize'){
+				setfontSize();
+				}else if(id == 'insertHtml'){
+				setinsertHtml();
+				}else{
+				var win = document.getElementById("editor").contentWindow;
+				win.document.execCommand(id, false, null);
+				win.focus();
+				}
+            });
+
+        });
+
+    //设置字体
+    function setfontName() {
+	    var font = prompt("请输入文字大小","'Microsoft YaHei','黑体','Arial'");
+		if (font!=null && font!=""){
+			var win = document.getElementById("editor").contentWindow;
+			win.document.execCommand("fontName", false, font);
+		}
+        win.focus();
+    }
+    //设置字体大小
+    function setfontSize() {
+	    var size = prompt("请输入文字大小","1-7");
+		if (size!=null && size!=""){
+			var win = document.getElementById("editor").contentWindow;
+			win.document.execCommand("fontSize", false, size);
+		}
+        win.focus();
+    }
+    //设置插入文本
+    function setinsertHtml() {
+		var win = document.getElementById("editor").contentWindow;
+		var Iwin = document.getElementById("insertWin");
+		var Icon = document.getElementById("insertCon");
+		var Ibtn = document.getElementById("insertBtn");
+		Iwin.style.display = 'block';
+		Ibtn.onclick=function(){
+			var text = Icon.value;
+			win.document.execCommand("insertHtml", false, '<p></p><pre>'+text+'</pre><p></p>');
+			Iwin.style.display = 'none';
+			Icon.value = '';
+			win.focus();
+		}
+    }
+	//全屏
+	function full(){
+		var win = document.getElementById("winfull");
+		var e = document.getElementById("editor");
+		Fullscreen(win);
+		e.style="width:100%;height:100%;"
+	}//退出全屏
+	function Cfull(){
+		var e = document.getElementById("editor");
+		CancelFullscreen();
+		e.style="width:auto;height:auto;"
+	}
+	
+	function Fullscreen(element) {
+		if (element.requestFullscreen) {
+			element.requestFullscreen();
+		} else if (element.mozRequestFullScreen) {
+			element.mozRequestFullScreen();
+		} else if (element.msRequestFullscreen) {
+			element.msRequestFullscreen();//ie浏览器
+		} else if (element.webkitRequestFullscreen) {
+			element.webkitRequestFullScreen();//谷歌浏览器
+		}
+	}
+	function CancelFullscreen() {
+		if (document.exitFullscreen) {
+			document.exitFullscreen(); 
+		} else if (
+			document.msExitFullscreen){
+			document.msExitFullscreen();
+		} else if (document.mozCancelFullScreen) {
+			document.mozCancelFullScreen();
+		} else if (document.webkitExitFullscreen) {
+			document.webkitExitFullscreen();
+		}
+	}
+    </script>
+
+</head>
+
+<body id="winfull" style="background-color:#fff;">
+<p>
+<input type="button" id="full" value="全屏" style="font-weight:bold" onclick="full();"/>
+<input type="button" id="Cfull" value="退屏" style="font-weight:bold" onclick="Cfull();"/>
+<input type="button" id="undo" value="撤销" style="font-weight:bold" />
+<input type="button" id="redo" value="重做" style="font-weight:bold"/>
+<input type="button" id="selectAll" value="全选" style="font-weight:bold"/>
+<input type="button" id="removeFormat" value="格式化" style="font-weight:bold"/>
+<input type="button" id="bold" value="加粗" style="font-weight:bold" />
+<input type="button" id="fontName" value="字体" style="font-weight:bold" />
+<input type="button" id="fontSize" value="大小" style="font-weight:bold" />
+<input type="button" id="insertHorizontalRule" value="分隔线" style="font-weight:bold"/>
+<input type="button" id="justifyCenter" value="居中" style="font-weight:bold"/>
+<input type="button" id="justifyLeft" value="居左" style="font-weight:bold"/>
+<input type="button" id="justifyRight" value="居右" style="font-weight:bold"/>
+<input type="button" id="insertHtml" value="插入" style="font-weight:bold"/>
+</p>
+<p><iframe allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" id="editor" width="600px" height="200px" style="border:solid 1px;background-color:#fff;"></iframe></p>
+<input type="text" id="path" value="https://www.baidu.com/img/baidu_jgylogo3.gif" />
+<input type="button" id="insert_img" value="插入图片" />
+<div id="insertWin" style="position:absolute;top:50%;left:50%;width:400px;height:210px;background:#fff;border:1px solid #000;;margin:-102px 0 0 -202px;display:none;"><textarea id="insertCon" style="margin: 10px; height: 150px; width: 380px;"></textarea><input type="button" id="insertBtn" value="插入" style="font-weight:bold;float:left;margin-left:10px;"/></div>
+</body>
+</html>

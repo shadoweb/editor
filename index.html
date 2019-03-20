@@ -69,7 +69,8 @@
 		Iwin.style.display = 'block';
 		Ibtn.onclick=function(){
 			var text = Icon.value;
-			win.document.execCommand("insertHtml", false, '<p></p><pre>'+text+'</pre><p></p>');
+			var text_con ='<br />'+'<pre style="padding:8px;background-color:#eeeeee;border:1px dashed #aaaaaa;">'+HtmlUtil.htmlEncode(text)+'</pre>'+'<br />';
+			win.document.execCommand("insertHtml", false,text_con);
 			Iwin.style.display = 'none';
 			Icon.value = '';
 			win.focus();
@@ -85,7 +86,7 @@
 	function Cfull(){
 		var e = document.getElementById("editor");
 		CancelFullscreen();
-		e.style="width:auto;height:auto;"
+		e.style="width:auto;height:auto;min-width:80%;min-height:80%;"
 	}
 	
 	function Fullscreen(element) {
@@ -112,27 +113,35 @@
 		}
 	}
     </script>
-
+<style>
+input{
+    font-weight: bold;
+    padding: 3px;
+    margin: 0;
+    background: #eee;
+    border: 0;
+}
+</style>
 </head>
 
 <body id="winfull" style="background-color:#fff;">
 <p>
-<input type="button" id="full" value="全屏" style="font-weight:bold" onclick="full();"/>
-<input type="button" id="Cfull" value="退屏" style="font-weight:bold" onclick="Cfull();"/>
-<input type="button" id="undo" value="撤销" style="font-weight:bold" />
-<input type="button" id="redo" value="重做" style="font-weight:bold"/>
-<input type="button" id="selectAll" value="全选" style="font-weight:bold"/>
-<input type="button" id="removeFormat" value="格式化" style="font-weight:bold"/>
-<input type="button" id="bold" value="加粗" style="font-weight:bold" />
-<input type="button" id="fontName" value="字体" style="font-weight:bold" />
-<input type="button" id="fontSize" value="大小" style="font-weight:bold" />
-<input type="button" id="insertHorizontalRule" value="分隔线" style="font-weight:bold"/>
-<input type="button" id="justifyCenter" value="居中" style="font-weight:bold"/>
-<input type="button" id="justifyLeft" value="居左" style="font-weight:bold"/>
-<input type="button" id="justifyRight" value="居右" style="font-weight:bold"/>
-<input type="button" id="insertHtml" value="插入" style="font-weight:bold"/>
+<input type="button" id="full" value="全屏" onclick="full();"/>
+<input type="button" id="Cfull" value="退屏" onclick="Cfull();"/>
+<input type="button" id="undo" value="撤销"/>
+<input type="button" id="redo" value="重做"/>
+<input type="button" id="selectAll" value="全选"/>
+<input type="button" id="removeFormat" value="格式化"/>
+<input type="button" id="bold" value="加粗"/>
+<input type="button" id="fontName" value="字体"/>
+<input type="button" id="fontSize" value="大小"/>
+<input type="button" id="insertHorizontalRule" value="分隔线"/>
+<input type="button" id="justifyCenter" value="居中" />
+<input type="button" id="justifyLeft" value="居左"/>
+<input type="button" id="justifyRight" value="居右"/>
+<input type="button" id="insertHtml" value="插入"/>
 </p>
-<p><iframe allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" id="editor" width="600px" height="200px" style="border:solid 1px;background-color:#fff;"></iframe></p>
+<p><iframe allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" id="editor" style="width:auto;height:auto;min-width:80%;min-height:80%;"></iframe></p>
 <input type="text" id="path" value="https://www.baidu.com/img/baidu_jgylogo3.gif" />
 <input type="button" id="insert_img" value="插入图片" />
 <div id="insertWin" style="position:absolute;top:50%;left:50%;width:400px;height:210px;background:#fff;border:1px solid #000;;margin:-102px 0 0 -202px;display:none;"><textarea id="insertCon" style="margin: 10px; height: 150px; width: 380px;"></textarea><input type="button" id="insertBtn" value="插入" style="font-weight:bold;float:left;margin-left:10px;"/></div>
